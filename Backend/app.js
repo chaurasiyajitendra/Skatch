@@ -8,7 +8,11 @@ const productRouter = require('./routes/produtRouter');
 const cors = require('cors');
 const path = require('path');
 
-app.use(cors());
+app.use(cors({
+    origin: 'https://skatch-frontend.onrender.com', // frontend ka domain
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true // agar cookies ya tokens bhejne hain
+}));
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
