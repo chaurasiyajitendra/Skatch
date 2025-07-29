@@ -8,11 +8,27 @@ const productRouter = require('./routes/produtRouter');
 const cors = require('cors');
 const path = require('path');
 
+const allowedOrigins = [
+  'http://localhost:5173',                   // Local frontend
+  'https://skatch-frontend.onrender.com'     // Production frontend
+];
+
+// ✅ Dynamic CORS handling
 app.use(cors({
-    origin: 'https://skatch-frontend.onrender.com', // frontend ka domain
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true // agar cookies ya tokens bhejne hain
+  origin: function (origin, callback) {
+    // Allow requests from allowed origins or server-to-server (no origin)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS not allowed for this origin'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true
 }));
+
+// ✅ Handle preflight OPTIONS request
+app.options('*', cors());
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
